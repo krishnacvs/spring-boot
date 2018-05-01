@@ -1,13 +1,16 @@
 package com.hellokoding.auth.service;
 
-import com.hellokoding.auth.model.User;
-import com.hellokoding.auth.repository.RoleRepository;
-import com.hellokoding.auth.repository.UserRepository;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import com.hellokoding.auth.model.Role;
+import com.hellokoding.auth.model.User;
+import com.hellokoding.auth.repository.RoleRepository;
+import com.hellokoding.auth.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,7 +24,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
+        Set<Role> userRoles = new HashSet<>(roleRepository.findAll());
+        user.setRoles(userRoles);
         userRepository.save(user);
     }
 
